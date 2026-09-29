@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>✨ Happy Birthday Riya (Tasu)! ✨</title>
+  <meta name="description" content="A magical 3D interactive birthday celebration for Riya (Tasu) with live flying butterflies, floating balloons, letter, and music box lullaby.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Three.js for true 3D WebGL Scene & Camera -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="day">
+
+  <!-- Fullscreen WebGL 3D Background Canvas -->
+  <canvas id="webglCanvas"></canvas>
+
+  <!-- 2D Overlay Canvas for Confetti & Butterfly Sparkle Trails -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Live 3D Overlay Butterflies Fluttering in Viewport -->
+  <div class="live-butterfly-container" id="liveButterflyContainer" aria-hidden="true">
+    <div class="live-3d-butterfly bf-live-1" data-bf-id="1">
+      <div class="wing wing-l"></div>
+      <div class="bf-torso"></div>
+      <div class="wing wing-r"></div>
+      <div class="bf-glow"></div>
+    </div>
+    <div class="live-3d-butterfly bf-live-2" data-bf-id="2">
+      <div class="wing wing-l"></div>
+      <div class="bf-torso"></div>
+      <div class="wing wing-r"></div>
+      <div class="bf-glow"></div>
+    </div>
+    <div class="live-3d-butterfly bf-live-3" data-bf-id="3">
+      <div class="wing wing-l"></div>
+      <div class="bf-torso"></div>
+      <div class="wing wing-r"></div>
+      <div class="bf-glow"></div>
+    </div>
+  </div>
+
+  <!-- 3D Interactive Responsive Control Bar -->
+  <header class="top-nav" aria-label="Controls">
+    <div class="nav-left">
+      <button id="editNameBtn" class="pill-btn glass-btn" title="Personalize Name & Message">
+        <span class="btn-icon">✏️</span>
+        <span class="btn-text">Edit</span>
+      </button>
+      <button id="spawnButterflyBtn" class="pill-btn highlight-btn-mini" title="Release Live Flying Butterflies">
+        <span class="btn-icon">🦋</span>
+        <span class="btn-text">Release Butterfly</span>
+      </button>
+    </div>
+
+    <div class="nav-center">
+      <nav class="scene-stepper" aria-label="3D Story Scenes">
+        <button class="step-dot active" data-scene="0" title="Scene 1: 3D Sky">
+          <span class="dot-num">1</span>
+          <span class="dot-label">Sky</span>
+        </button>
+        <button class="step-dot" data-scene="1" title="Scene 2: Celebration">
+          <span class="dot-num">2</span>
+          <span class="dot-label">Party</span>
+        </button>
+        <button class="step-dot" data-scene="2" title="Scene 3: Letter & Card">
+          <span class="dot-num">3</span>
+          <span class="dot-label">Letter</span>
+        </button>
+        <button class="step-dot" data-scene="3" title="Scene 4: Starlight Finale">
+          <span class="dot-num">4</span>
+          <span class="dot-label">Finale</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="nav-right">
+      <button id="soundToggleBtn" class="icon-btn glass-btn" title="Toggle Music Box Lullaby" aria-pressed="false">
+        <span class="btn-icon" id="soundIcon">🔇</span>
+        <span class="sound-wave" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Story Container -->
+  <main id="storyContainer">
+
+    <!-- ============================================ -->
+    <!-- SCENE 1: 3D OPENING SKY (Dedicated to Riya / Tasu) -->
+    <!-- ============================================ -->
+    <section id="scene-opening" class="scene active" data-index="0">
+      <div class="scene-3d-card glass-panel tilt-card">
+        <div class="badge-pill">🌸 To The Sweetest Girl In The World 🌸</div>
+        <h1 class="main-title">
+          <span class="title-sub">Happy Birthday Dearest</span>
+          <span class="title-name birthday-recipient-name">Riya (Tasu) 💖</span>
+        </h1>
+        <p class="welcome-tagline">
+          Today is all about celebrating YOU! Move your finger or cursor to guide glowing live butterflies across the 3D sky!
+        </p>
+
+        <div class="cta-wrapper">
+          <button id="startJourneyBtn" class="gift-glow-btn pulse-glow">
+            <span class="btn-gift-icon">🎁</span>
+            <span class="btn-caption">
+              <strong>Open Tasu's Surprise ✨</strong>
+              <small>Tap to start melody &amp; 3D butterflies 🦋</small>
+            </span>
+            <span class="sparkle-star s1">✨</span>
+            <span class="sparkle-star s2">💖</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SCENE 2: 3D RISING BALLOONS & CELEBRATION -->
+    <!-- ============================================ -->
+    <section id="scene-birthday" class="scene" data-index="1">
+      <div class="scene-header">
+        <div class="scene-3d-card glass-panel tilt-card celebration-card">
+          <div class="bunting-3d" aria-hidden="true">
+            <span>🎉</span><span>🎂</span><span>🎈</span><span>✨</span><span>🎀</span><span>💖</span>
+          </div>
+          <h2 class="glowing-bday-title">
+            <span class="glow-text-shimmer">✨ Happy Birthday! ✨</span>
+            <span class="recipient-display birthday-recipient-name">Riya (Tasu) 💕</span>
+          </h2>
+          <p class="bday-subtitle">
+            May your day be filled with endless laughter, magical moments, and the sweetest smiles!
+          </p>
+
+          <!-- Interactive Celebration Badges / Wishes -->
+          <div class="wishes-interactive-grid">
+            <div class="wish-item-chip" id="chipWish1" title="Tap for a sparkle!">
+              <span class="chip-icon">💖</span>
+              <span class="chip-text">Endless Love &amp; Joy</span>
+            </div>
+            <div class="wish-item-chip" id="chipWish2" title="Tap for a sparkle!">
+              <span class="chip-icon">🌟</span>
+              <span class="chip-text">Bright Success</span>
+            </div>
+            <div class="wish-item-chip" id="chipWish3" title="Tap for a sparkle!">
+              <span class="chip-icon">🌸</span>
+              <span class="chip-text">Everlasting Smile</span>
+            </div>
+            <div class="wish-item-chip" id="chipWish4" title="Tap for a sparkle!">
+              <span class="chip-icon">🦋</span>
+              <span class="chip-text">Dreams Taking Flight</span>
+            </div>
+          </div>
+
+          <p class="tap-hint">💡 Tap anywhere in the 3D sky to pop floating balloons or release more butterflies!</p>
+        </div>
+      </div>
+
+      <div class="scene-nav-prompt">
+        <button class="next-scene-btn glass-btn" data-target="2">
+          <span>Read Your Birthday Letter</span>
+          <span class="btn-arrow">💌 ➔</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SCENE 3: 3D PULSING HEART ENVELOPE & LETTER -->
+    <!-- ============================================ -->
+    <section id="scene-card" class="scene" data-index="2">
+      <div class="scene-header">
+        <div class="scene-3d-card glass-panel tilt-card compact-header">
+          <div class="badge-pill">💌 Sealed with Care 💌</div>
+          <h2 class="scene-title">A Letter For Riya (Tasu)</h2>
+          <p class="scene-desc">Tap the glowing wax seal to open your special birthday letter!</p>
+        </div>
+      </div>
+
+      <!-- 3D Origami Envelope Container -->
+      <div class="envelope-3d-viewport">
+        <div class="envelope-3d-box" id="envelope3D">
+          <div class="env-face env-back"></div>
+          
+          <!-- 3D Sliding Letter -->
+          <div class="letter-sheet-3d" id="letterSheet3D">
+            <div class="letter-header">
+              <span class="letter-stamp">🎂</span>
+              <span class="letter-date" id="currentDateDisplay">Special Day &amp; Always</span>
+            </div>
+            <div class="letter-body">
+              <h3 class="letter-greeting">Dearest <span class="birthday-recipient-name">Riya (Tasu)</span>,</h3>
+              <p class="letter-message" id="personalizedLetterText">
+                Happy Birthday to the most wonderful, bright, and loving person! Your presence brings so much warmth, laughter, and happiness wherever you go.
+              </p>
+              <p class="letter-message-2" id="personalizedLetterText2">
+                May this year bless you with limitless smiles, blooming success in everything you do, good health, and moments as sweet as honey! Always keep shining your brightest.
+              </p>
+              <div class="letter-signoff">
+                <span>With endless love &amp; warmest wishes,</span>
+                <strong class="letter-signature" id="signatureDisplay">Forever Cheering For You, Tasu! 💖</strong>
+              </div>
+            </div>
+
+            <!-- Inside-Letter Surprise Button -->
+            <div class="letter-action-row">
+              <button id="surpriseModalBtn" class="magic-surprise-btn pulse-glow">
+                <span class="btn-icon">💖</span>
+                <span>One More Surprise For Tasu!</span>
+                <span class="sparkle-spark">✨</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="env-face env-front"></div>
+          <div class="env-flap env-flap-top" id="envelopeFlapTop">
+            <div class="heart-wax-seal-3d" id="waxSeal3D" title="Click to break seal & open!">
+              <span class="seal-3d-heart">💖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scene-nav-prompt">
+        <button class="next-scene-btn glass-btn" data-target="3">
+          <span>Starlight Finale</span>
+          <span class="btn-arrow">🌙 ➔</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SCENE 4: 3D STARLIGHT FINALE -->
+    <!-- ============================================ -->
+    <section id="scene-finale" class="scene" data-index="3">
+      <div class="scene-3d-card glass-panel finale-panel tilt-card">
+        <div class="badge-pill gold-badge">✨ Starlight Blessing For Riya ✨</div>
+        <h2 class="finale-title">May All Your Wishes Come True, Tasu! 🌠</h2>
+        
+        <div class="finale-quote-box">
+          <p class="closing-lines-1">
+            "Wherever your journey leads this year, may you walk with happiness, surrounded by kindness, starlight, and endless love."
+          </p>
+          <div class="golden-divider"><span>💖 ✨ 💖</span></div>
+          <p class="closing-lines-2">
+            Happy Birthday, <span class="birthday-recipient-name">Riya (Tasu)</span>! You truly make the world a much more beautiful place! 💕
+          </p>
+        </div>
+
+        <div class="stargazing-status-bar">
+          <div class="cat-star-tag">⭐ Wishing for Tasu</div>
+          <div class="cat-star-tag">👑 Cheering for Riya</div>
+          <div class="cat-star-tag">💫 Pure Happiness</div>
+        </div>
+
+        <!-- Finale Actions -->
+        <div class="finale-actions">
+          <button id="replayExperienceBtn" class="pill-btn glass-btn">
+            <span class="btn-icon">🔄</span>
+            <span>Replay Surprise</span>
+          </button>
+          <button id="makeAWishBtn" class="pill-btn highlight-btn">
+            <span class="btn-icon">🌠</span>
+            <span>Tasu's Star Wish</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================ -->
+  <!-- SURPRISE POPUP MODAL (CAKE & BLOWABLE CANDLE) -->
+  <!-- ============================================ -->
+  <div id="surpriseModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-card glass-modal tilt-card">
+      <button class="modal-close-btn" id="closeModalBtn" aria-label="Close surprise modal">&times;</button>
+      
+      <div class="modal-badge">🎂 Grand Birthday Celebration 🎂</div>
+      <h2 id="modalTitle" class="modal-title">Blow Out Tasu's Candle!</h2>
+      <p class="modal-desc">Tap the 3D candle flame to blow it out and unlock your special fortune!</p>
+
+      <!-- 3D Rendered Interactive Cake -->
+      <div class="cake-container-3d" id="birthdayCake3D">
+        <div class="cake-tier tier-base">
+          <div class="tier-frosting">🍓 🍓 🍓 🍓</div>
+        </div>
+        <div class="cake-tier tier-mid">
+          <div class="tier-frosting">🍒 ✨ 🍒 ✨</div>
+        </div>
+        <div class="cake-candle-3d" id="birthdayCandle3D" title="Click to blow out candle!">
+          <div class="candle-flame-3d" id="candleFlame3D">
+            <div class="flame-inner"></div>
+            <div class="flame-aura"></div>
+          </div>
+          <div class="candle-wick"></div>
+          <div class="candle-cylinder"></div>
+          <div class="candle-smoke-3d" id="candleSmoke3D">💨</div>
+        </div>
+      </div>
+
+      <div class="wish-reveal-box" id="wishFortuneBox">
+        <div class="fortune-icon">🎉</div>
+        <h4 class="fortune-heading">Wish Granted For Riya! 💫</h4>
+        <p class="fortune-text" id="fortuneText">
+          "May every single dream of yours turn into reality this year, bringing abundant joy, love, peace, and sweetest adventures!"
+        </p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="moreConfettiBtn" class="pill-btn highlight-btn">
+          <span>🎊 More Fireworks For Tasu!</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PERSONALIZATION SETTINGS MODAL -->
+  <!-- ============================================ -->
+  <div id="personalizeModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="personalizeTitle">
+    <div class="modal-card glass-modal">
+      <button class="modal-close-btn" id="closePersonalizeBtn" aria-label="Close personalization">&times;</button>
+      
+      <div class="modal-badge">✏️ Customization</div>
+      <h2 id="personalizeTitle" class="modal-title">Edit Name &amp; Message</h2>
+      <p class="modal-desc">Personalize the text and message anytime.</p>
+
+      <form id="personalizeForm" class="personalize-form">
+        <div class="form-group">
+          <label for="inputName">Birthday Person's Name:</label>
+          <input type="text" id="inputName" value="Riya (Tasu)" maxlength="30" required>
+        </div>
+
+        <div class="form-group">
+          <label for="inputSender">Sender Name / Signature:</label>
+          <input type="text" id="inputSender" value="Forever Cheering For You, Tasu! 💖" maxlength="40">
+        </div>
+
+        <div class="form-group">
+          <label for="inputMessage">Letter Message (Paragraph 1):</label>
+          <textarea id="inputMessage" rows="3">Happy Birthday to the most wonderful, bright, and loving person! Your presence brings so much warmth, laughter, and happiness wherever you go.</textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="resetDefaultsBtn" class="pill-btn glass-btn">Reset Defaults</button>
+          <button type="submit" class="pill-btn highlight-btn">Save &amp; Apply ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
